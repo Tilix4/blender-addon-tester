@@ -19,13 +19,13 @@ def _run_blender_with_python_script(blender, blender_python_script, app_template
     os.environ["LOCAL_PYTHONPATH"] = local_python
     
     # Set the application template call if specified
-    app_template_command = f"--app-template {app_template_name}" if app_template_name else ""
+    app_template_command = ["--app-template", app_template_name] if app_template_name else []
 
-    cmd = f'{blender} -b --python "{blender_python_script}" {app_template_command}'
-    print(f"Will run the following command: {cmd}")
+    cmd = [blender, "-b", "--python", blender_python_script] + app_template_command
+    print(f"Will run the following command: {' '.join(cmd)}")
 
     # TODO Clean up Blender
-    result = int(os.system(cmd))
+    result = subprocess.run(cmd).returncode
     if 0 == result:
         return 0
     else:
